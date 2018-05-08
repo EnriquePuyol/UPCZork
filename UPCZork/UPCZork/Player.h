@@ -23,7 +23,7 @@ public:
 	bool Drop(string & itemName) override;
 	bool Use()  override;
 	void Action() override;
-	bool Examine();
+	bool Examine(string & itemName);
 	bool Equip();
 
 	void Inventory();

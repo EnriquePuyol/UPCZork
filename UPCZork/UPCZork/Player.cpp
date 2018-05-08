@@ -33,6 +33,11 @@ bool Player::Pick(string & itemName)
 		cout << "\n I can not find that item\n\n";
 		return true;
 	}
+	if (item->itemType == CHEST)
+	{
+		cout << "\n I can not pick that\n\n";
+		return true;
+	}
 	else
 	{
 		cout << "\n You take ";
@@ -54,8 +59,8 @@ bool Player::Drop(string & itemName)
 
 	if (item == NULL)
 	{
-		cout << "\n You have no item with that name.\n";
-		return false;
+		cout << "\n You have no item with that name.\n\n";
+		return true;
 	}
 
 	cout << "\n You drop ";
@@ -79,9 +84,26 @@ void Player::Action()
 
 }
 
-bool Player::Examine()
+bool Player::Examine(string & itemName)
 {
-	return false;
+
+	Item* item = (Item*)Find(itemName, ITEM);
+
+	if (item == NULL)
+	{
+		cout << "\n You have no item with that name.\n\n";
+		return true;
+	}
+
+	StartKeyWord();
+	cout << "\n " << item->name;
+	EndKeyWord();
+	if (item->itemType == WEAPON)
+	{
+		cout << "\n ) It has " << item->damage << " point of damage\n\n";
+	}
+
+	return true;
 }
 
 bool Player::Equip()
@@ -108,7 +130,7 @@ void Player::Inventory()
 	{
 		if ((*it)->type == ITEM)
 		{
-			cout << "\n  -You have a ";
+			cout << "\n  - You have a ";
 			StartKeyWord();
 			cout << (*it)->name;
 			EndKeyWord();
@@ -129,9 +151,15 @@ bool Player::Go(string & direction)
 
 	Room * actualRoom = (Room*)parent;
 
-	if (actualRoom->isDirectionNull(direction))
+	if (actualRoom->IsDirectionNull(direction))
 	{
 		cout << "\n You can not go in that direction\n\n";
+		return true;
+	}
+
+	if (actualRoom->GetRoomOfDirection(direction)->isLocked)
+	{
+		cout << "\n That direction is locked\n\n";
 		return true;
 	}
 

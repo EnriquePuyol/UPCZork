@@ -22,7 +22,7 @@ class Item : public Entity
 
 public:
 
-	Item(const char* _name, const char* _description, Entity* _parent, ItemType _itemType = OTHER);
+	Item(const char* _name, const char* _description, Entity* _parent, int _id, ItemType _itemType = OTHER);
 	~Item();
 
 	void Look()   override;
@@ -35,7 +35,10 @@ public:
 
 public:
 
+	int id;
 	bool isLocked;
+
+	int damage;
 
 	ItemType itemType;
 

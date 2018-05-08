@@ -2,8 +2,6 @@
 #define __Room__
 
 #include <iostream>
-/*#include <string>
-#include <list>*/
 
 #include "Entity.h"
 
@@ -23,12 +21,15 @@ public:
 	bool Use()  override { return false; };
 	void Action() override {};
 
-	bool SetNeighbour(Room * room, const char * direction);
-	bool isDirectionNull(string & direction);
+	bool   SetNeighbour(Room * room, const char * direction);
+	bool   IsDirectionNull(string & direction);
+	bool   AreEnemiesAlive();
 	Room * GetRoomOfDirection(string & direction);
+
 
 public:
 
+	bool isLocked;
 	const char * directions[4] = {"North", "East", "West", "South"};
 
 	Room * neighbours[4] = {NULL, NULL, NULL, NULL};

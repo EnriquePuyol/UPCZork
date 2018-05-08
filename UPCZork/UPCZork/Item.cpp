@@ -3,11 +3,12 @@
 #include "Item.h"
 
 
-Item::Item(const char* _name, const char* _description, Entity* _parent, ItemType _itemType) :
+Item::Item(const char* _name, const char* _description, Entity* _parent, int _id, ItemType _itemType) :
 	Entity(_name, _description, _parent), itemType(_itemType)
 {
 	type = ITEM;
 	isLocked = false;
+	id = _id;
 }
 
 
@@ -17,11 +18,17 @@ Item::~Item()
 
 void Item::Look()
 {
+	StartKeyWord();
 	cout << "\n " << name << "\n ";
-	cout << description << "\n";
+	EndKeyWord();
 
 	if (!isLocked)
 	{
+		if (childs.size() == 0 && itemType == CHEST)
+		{
+			cout << " It is empty";
+		}
+
 		for (list<Entity*>::const_iterator it = childs.begin(); it != childs.cend(); ++it)
 		{
 			if ((*it)->type == ITEM)
@@ -30,7 +37,7 @@ void Item::Look()
 				StartKeyWord();
 				cout << (*it)->name;
 				EndKeyWord();
-				cout << " inside\n";
+				cout << " inside";
 			}
 		}
 		cout << "\n\n";

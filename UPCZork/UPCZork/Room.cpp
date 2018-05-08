@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
 #include "Room.h"
+#include "Enemy.h"
 #include "Common.h"
 
 Room::Room(const char* _name, const char* _description) : 
@@ -39,7 +40,7 @@ void Room::Look()
 	{
 		if ((*_item)->type == ITEM)
 		{
-			cout << "\n  -There is an item here: ";
+			cout << "\n  - There is an item here: ";
 			StartKeyWord(); 
 			cout << (*_item)->name;
 			EndKeyWord();
@@ -89,7 +90,7 @@ bool Room::SetNeighbour(Room * room, const char * direction)
 	return false;
 }
 
-bool Room::isDirectionNull(string & direction)
+bool Room::IsDirectionNull(string & direction)
 {
 	if (Equals(direction, "North") || Equals(direction, "north"))
 	{
@@ -110,6 +111,23 @@ bool Room::isDirectionNull(string & direction)
 	{
 		if (neighbours[3] == NULL)
 			return true;
+	}
+
+	return false;
+}
+
+bool Room::AreEnemiesAlive()
+{
+	for (list<Entity*>::const_iterator _enemy = childs.begin(); _enemy != childs.cend(); _enemy++)
+	{
+		if ((*_enemy)->type == ENEMY)
+		{
+			Enemy * enemy = (Enemy *)(*_enemy);
+			if (enemy->isAlive)
+			{
+				return true;
+			}
+		}
 	}
 
 	return false;

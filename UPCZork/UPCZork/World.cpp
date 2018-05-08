@@ -37,8 +37,11 @@ bool World::RunGame()
 void World::CreateWorld()
 {
 	// Rooms
-	Room * room1 = new Room("Room 1", "You are in the beta room test!");
-	Room * room2 = new Room("Room 2", "Your are in the magic room test!");
+	Room * brokenRoom = new Room("BrokenRoom", "Unavailable room to keep the items that breaks");
+	Room * room1	  = new Room("Room_1", "You are in the beta room test!");
+	Room * room2	  = new Room("Room_2", "Your are in the magic room test!");
+	room2->isLocked = true;
+	rooms.push_back(brokenRoom);
 	rooms.push_back(room1);
 	rooms.push_back(room2);
 
@@ -47,15 +50,18 @@ void World::CreateWorld()
 
 	// Enemies
 	Enemy * wolf = new Enemy("Wolf", "A hungry grey wolf", room1, 1, 1, 0);
-
+	//wolf->isAlive = false;
 	enemies.push_back(wolf);
 
 	// Items
-	Item * chest = new Item("Wood_Chest", "A wooden chest, what could have inside?", room1, CHEST);
-	//chest->isLocked = true;
-	Item * sword = new Item("Sword", "An ordinary test sword", chest, WEAPON);
-	Item * key = new Item("Wood_Key", "A simple key made of wood", wolf, KEY);
+	Item * chest = new Item("Wood_Chest", "A wooden chest, what could have inside?", room1, 1, CHEST);
+	chest->isLocked = true;
+	Item * sword = new Item("Sword", "An ordinary test sword", room1, 0, WEAPON);
+	sword->damage = 1;
+	Item * key = new Item("Wood_Key", "A simple key made of wood", room1, 1, KEY);
+	Item * key2 = new Item("Iron_Key", "A rusty old iron key", chest, 2, KEY);
 
+	items.push_back(chest);
 	items.push_back(sword);
 	items.push_back(key);
 
@@ -143,6 +149,10 @@ bool World::ParseActions(vector<string>& args)
 		{
 			return player->Drop(args[1]);
 		}
+		else if (Equals(args[0], "examine"))
+		{
+			return player->Examine(args[1]);
+		}
 	}
 	else if (numberOfArgs == 3)
 	{
@@ -205,7 +215,15 @@ bool World::ParseActions(vector<string>& args)
 						return true;
 					}
 
-					cout << "\n You take " << subitem->name << " from " << item->name << ".\n\n";
+					cout << "\n You take ";
+					StartKeyWord();
+					cout << subitem->name;
+					EndKeyWord();
+					cout << " from ";
+					StartKeyWord(); 
+					cout << item->name;
+					EndKeyWord();
+					cout << ".\n\n";
 					subitem->ChangeParentTo(player);
 					return true;
 
@@ -232,12 +250,75 @@ bool World::ParseActions(vector<string>& args)
 						return true;
 					}
 
-					cout << "\n You take " << subitem->name << " from " << enemy->name << ".\n\n";
+					cout << "\n You take ";
+					StartKeyWord(); 
+					cout << subitem->name;
+					EndKeyWord(); 
+					cout << " from ";
+					StartKeyWord(); 
+					cout << enemy->name; EndKeyWord();
+					cout << ".\n\n";
 					subitem->ChangeParentTo(player);
 					return true;
 
 				}
 			}
+		}
+		else if (Equals(args[0], "unlock"))
+		{
+			//Coger un objeto dentro de otro objeto
+			Item* item1 = (Item*)player->parent->Find(args[1], ITEM); // Chest
+			Item* item2 = (Item*)player->Find(args[3], ITEM);		  // Keys
+
+			if (item1 == NULL)
+			{
+				cout << "\n\n Cannot find '" << args[1] << "'\n\n";
+				return true;
+			}
+			if (item2 == NULL)
+			{
+				cout << "\n\n I do not own '" << args[3] << "'\n\n";
+				return true;
+			}
+
+			if (item1->id == item2->id)
+			{
+				Room * actualRoom = (Room *)player->parent;
+
+				if (actualRoom->AreEnemiesAlive())
+				{
+					cout << "\n Can not unlock while enemies are alive...\n\n";
+					return true;
+				}
+
+				item1->isLocked = false;
+				item2->ChangeParentTo(rooms.front());
+				cout << "\n The ";
+				StartKeyWord();
+				cout << item1->name;
+				EndKeyWord();
+				cout << " has been unlocked.\n";
+
+				StartKeyWord();
+				cout << " " << item2->name;
+				EndKeyWord();
+				cout << " has broken.\n\n";
+
+				return true;
+			}
+
+			cout << "\n The ";
+			StartKeyWord();
+			cout << item1->name;
+			EndKeyWord();
+			cout << " can not be unlocked with ";
+			StartKeyWord();
+			cout << item2->name;
+			EndKeyWord();
+			cout << "\n\n";
+
+			return true;
+
 		}
 	}
 

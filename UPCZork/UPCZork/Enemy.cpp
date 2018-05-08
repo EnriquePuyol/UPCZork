@@ -28,17 +28,21 @@ void Enemy::Look()
 		{
 			if ((*it)->type == ITEM)
 			{
-				cout << "\n  -Looks like it has a ";
+				cout << "\n  - Looks like it has a ";
 				StartKeyWord();
 				cout << (*it)->name;
 				EndKeyWord();
 			}
 		}
-		cout << "\n";
+		cout << "\n\n";
 	}
 	else
 	{
-		cout << "\nHere lies " << name << " dead\n";
+		cout << "\n Here lies ";
+		StartKeyWord();
+		cout << name;
+		EndKeyWord();
+		cout << " dead...";
 
 		for (list<Entity*>::const_iterator it = childs.begin(); it != childs.cend(); ++it)
 		{

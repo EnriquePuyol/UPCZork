@@ -13,5 +13,7 @@ bool Equals(const string& a, const string& b);
 void StartKeyWord();
 void EndKeyWord();
 void Help();
+void StartInput();
+void EndInput();
 
 #endif
