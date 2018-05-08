@@ -51,7 +51,9 @@ void World::CreateWorld()
 	enemies.push_back(wolf);
 
 	// Items
-	Item * sword = new Item("Sword", "An ordinary test sword", room1, WEAPON);
+	Item * chest = new Item("Wood_Chest", "A wooden chest, what could have inside?", room1, CHEST);
+	//chest->isLocked = true;
+	Item * sword = new Item("Sword", "An ordinary test sword", chest, WEAPON);
 	Item * key = new Item("Wood_Key", "A simple key made of wood", wolf, KEY);
 
 	items.push_back(sword);
@@ -189,15 +191,21 @@ bool World::ParseActions(vector<string>& args)
 			{
 				if (Equals(args[3], item->name))
 				{
+					if (item->isLocked)
+					{
+						cout << "\n It is locked...\n\n";
+						return true;
+					}
+
 					Item* subitem = (Item*)item->Find(args[1], ITEM);
 
 					if (subitem == NULL)
 					{
-						cout << "\n " << item->name << " does not have '" << args[1] << "'.\n";
+						cout << "\n " << item->name << " does not have '" << args[1] << "'.\n\n";
 						return true;
 					}
 
-					cout << "\n You take " << subitem->name << " from " << item->name << ".\n";
+					cout << "\n You take " << subitem->name << " from " << item->name << ".\n\n";
 					subitem->ChangeParentTo(player);
 					return true;
 
@@ -212,7 +220,7 @@ bool World::ParseActions(vector<string>& args)
 				{
 					if (enemy->isAlive)
 					{
-						cout << "\n You should kill it first...\n";
+						cout << "\n You should kill it first...\n\n";
 						return true;
 					}
 
@@ -220,11 +228,11 @@ bool World::ParseActions(vector<string>& args)
 
 					if (subitem == NULL)
 					{
-						cout << "\n " << enemy->name << " does not have '" << args[1] << "'.\n";
+						cout << "\n " << enemy->name << " does not have '" << args[1] << "'.\n\n";
 						return true;
 					}
 
-					cout << "\n You take " << subitem->name << " from " << enemy->name << ".\n";
+					cout << "\n You take " << subitem->name << " from " << enemy->name << ".\n\n";
 					subitem->ChangeParentTo(player);
 					return true;
 

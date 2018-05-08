@@ -13,6 +13,7 @@ enum ItemType
 {
 	KEY,
 	WEAPON,
+	CHEST,
 	OTHER
 };
 
@@ -24,15 +25,17 @@ public:
 	Item(const char* _name, const char* _description, Entity* _parent, ItemType _itemType = OTHER);
 	~Item();
 
-	void Look() override;
+	void Look()   override;
 	bool Pick(string & itemName) override;
 	bool Drop(string & itemName) override;
-	bool Use()  override;
+	bool Use()    override;
 	void Action() override;
 
 	void AddTreasure(Entity * _treasure);
 
 public:
+
+	bool isLocked;
 
 	ItemType itemType;
 
