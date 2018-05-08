@@ -39,27 +39,35 @@ void World::CreateWorld()
 	// Rooms
 	Room * brokenRoom = new Room("BrokenRoom", "Unavailable room to keep the items that breaks");
 	Room * room1	  = new Room("Room_1", "You are in the beta room test!");
-	Room * room2	  = new Room("Room_2", "Your are in the magic room test!");
-	room2->isLocked = true;
+	Room * room2	  = new Room("Room_2", "You are in the magic room test!");
+	Room * room3	  = new Room("Room_3", "You are in the north demo test!");
+	//room2->isLocked = true;
+	//room3->isLocked = true;
 	rooms.push_back(brokenRoom);
 	rooms.push_back(room1);
 	rooms.push_back(room2);
+	rooms.push_back(room3);
 
 	room1->SetNeighbour(room2, "West");
 	room2->SetNeighbour(room1, "East");
+	room1->SetNeighbour(room3, "North");
+	room3->SetNeighbour(room1, "South");
 
 	// Enemies
-	Enemy * wolf = new Enemy("Wolf", "A hungry grey wolf", room1, 1, 1, 0);
-	//wolf->isAlive = false;
+	Enemy * wolf = new Enemy("Wolf", "A hungry grey wolf", room1, 2, 1, 0);
+	wolf->blockingExits[2] = true;
+	//wolf->blockingExits[2] = true;
 	enemies.push_back(wolf);
 
 	// Items
-	Item * chest = new Item("Wood_Chest", "A wooden chest, what could have inside?", room1, 1, CHEST);
+	Item * chest = new Item("Wood_Chest", "A wooden chest, what could have inside?", room2, 1, CHEST);
 	chest->isLocked = true;
 	Item * sword = new Item("Sword", "An ordinary test sword", room1, 0, WEAPON);
-	sword->damage = 1;
-	Item * key = new Item("Wood_Key", "A simple key made of wood", room1, 1, KEY);
-	Item * key2 = new Item("Iron_Key", "A rusty old iron key", chest, 2, KEY);
+	sword->power = 1;
+	Item * key = new Item("Wood_Key", "A simple key made of wood", wolf, 1, KEY);
+	Item * potion = new Item("Basic_Potion", "A simple potion to heal yourself 1 HP", chest, 0, POTION);
+	potion->power = 1;
+	//Item * key2 = new Item("Iron_Key", "A rusty old iron key", wolf, 2, KEY);
 
 	items.push_back(chest);
 	items.push_back(sword);
@@ -99,9 +107,14 @@ bool World::ParseActions(vector<string>& args)
 			player->parent->Look();
 			return true;
 		}
-		if (Equals(args[0], "inventory"))
+		else if (Equals(args[0], "inventory"))
 		{
 			player->Inventory();
+			return true;
+		}
+		else if (Equals(args[0], "stats"))
+		{
+			player->Stats();
 			return true;
 		}
 	}
@@ -126,6 +139,16 @@ bool World::ParseActions(vector<string>& args)
 			}
 			else
 			{
+				for (int i = 0; i < 4; i++)
+				{
+					Room * actualRoom = (Room *)player->parent;
+					if (Equals(args[1], actualRoom->directions[i]))
+					{
+						actualRoom->Look(args[1]);
+						return true;
+					}
+				}
+
 				// Gets the name and description of the item or enemy
 				for (list<Entity*>::const_iterator it = player->parent->childs.begin(); it != player->parent->childs.cend(); ++it)
 				{
@@ -152,6 +175,15 @@ bool World::ParseActions(vector<string>& args)
 		else if (Equals(args[0], "examine"))
 		{
 			return player->Examine(args[1]);
+		}
+		else if (Equals(args[0], "attack"))
+		{
+			cout << "\n I need something to attack it with\n\n";
+			return true;
+		}
+		else if (Equals(args[0], "use"))
+		{
+			return player->Use(args[1]);
 		}
 	}
 	else if (numberOfArgs == 3)
@@ -281,7 +313,7 @@ bool World::ParseActions(vector<string>& args)
 				return true;
 			}
 
-			if (item1->id == item2->id)
+			if (item1->id == item2->id && item1->id != 0)
 			{
 				Room * actualRoom = (Room *)player->parent;
 
@@ -319,6 +351,72 @@ bool World::ParseActions(vector<string>& args)
 
 			return true;
 
+		}
+		else if (Equals(args[0], "attack"))
+		{
+			Room * actualRoom = (Room *)player->parent;
+
+			//Encontrar enemigo
+			Enemy * enemy = (Enemy *)actualRoom->Find(args[1], ENEMY);
+			if (enemy == NULL)
+			{
+				cout << "\n That enemy is not on this room\n\n";
+				return true;
+			}
+
+			//Encontrar objeto
+			Item* weapon = (Item*)player->Find(args[3], ITEM);
+
+			if (weapon == NULL)
+			{
+				cout << "\n That enemy is not on this room\n\n";
+				return true;
+			}
+
+			//Restarle vida al enemigo
+			enemy->hitPoints -= (weapon->power - enemy->armour);
+			cout << "\n You did " << (weapon->power + enemy->armour) << " damage to ";
+			StartKeyWord();
+			cout << enemy->name;
+			EndKeyWord();
+			cout << "\n";
+
+			if (enemy->hitPoints <= 0)
+			{
+				enemy->isAlive = false;
+				for (int i = 0; i < 4; i++)
+					enemy->blockingExits[i] = false;
+
+				cout << " You killed ";
+				StartKeyWord();
+				cout << enemy->name;
+				EndKeyWord();
+				cout << "\n\n";
+				return true;
+			}
+			
+			//Restarme vida a mi
+			if (player->armour == NULL)
+			{
+				player->hitPoints -= enemy->damage;
+
+				cout << " ";
+				StartKeyWord();
+				cout << enemy->name;
+				EndKeyWord();
+				cout << " attacked you and dealt " << enemy->damage << " damage\n\n";
+				return true;
+			}
+
+			player->hitPoints -= (enemy->damage - player->armour->power);
+
+			cout << " ";
+			StartKeyWord();
+			cout << enemy->name;
+			EndKeyWord();
+			cout << " attacked you and dealt " << enemy->damage << " damage\n\n";
+
+			return true;
 		}
 	}
 

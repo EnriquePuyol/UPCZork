@@ -10,6 +10,7 @@ Player::Player(const char* _name, const char* _description, Room* _room) :
 	Entity(_name, _description, (Entity*)_room)
 {
 	type = PLAYER;
+	hitPoints = 5;
 }
 
 
@@ -74,6 +75,41 @@ bool Player::Drop(string & itemName)
 	return true;
 }
 
+bool Player::Use(string & itemName)
+{
+	if (childs.size() == 0)
+	{
+		cout << "You do not have any items";
+		return true;
+	}
+
+	for (list<Entity*>::const_iterator it = childs.begin(); it != childs.cend(); ++it)
+	{
+		Item * item = (Item *)(*it);
+
+		if (Equals(item->name, itemName) && item->itemType == POTION)
+		{
+			hitPoints += item->power;
+
+			cout << "\n You used ";
+			StartKeyWord();
+			cout << item->name;
+			EndKeyWord();
+			cout << " and heal " << item->power;
+			if(item->power == 1)
+				cout << " point\n\n";
+			else
+				cout << " points\n\n";
+
+			return true;
+		}
+
+	}
+
+	cout << " You can not use that item\n\n";
+	return true;
+}
+
 bool Player::Use()
 {
 	return false;
@@ -100,7 +136,7 @@ bool Player::Examine(string & itemName)
 	EndKeyWord();
 	if (item->itemType == WEAPON)
 	{
-		cout << "\n ) It has " << item->damage << " point of damage\n\n";
+		cout << "\n ) It has " << item->power << " point of damage\n\n";
 	}
 
 	return true;
@@ -109,6 +145,16 @@ bool Player::Examine(string & itemName)
 bool Player::Equip()
 {
 	return false;
+}
+
+void Player::Stats()
+{
+	cout << "\n I have:\n\n";
+	cout << "  -HP  = " << hitPoints << "\n";
+	if(armour != NULL)
+		cout << "  -Def = " << armour->power << "\n\n";
+	else 
+		cout << "  -Def = 0\n\n";
 }
 
 void Player::Inventory()
@@ -143,7 +189,7 @@ bool Player::Go(string & direction)
 {
 	if (!Equals(direction, "North") && !Equals(direction, "north") &&
 		!Equals(direction, "South") && !Equals(direction, "south") &&
-		!Equals(direction, "West")  && !Equals(direction, "west") &&
+		!Equals(direction, "West")  && !Equals(direction, "west")  &&
 		!Equals(direction, "East")  && !Equals(direction, "east"))
 	{
 		return false;
@@ -159,7 +205,12 @@ bool Player::Go(string & direction)
 
 	if (actualRoom->GetRoomOfDirection(direction)->isLocked)
 	{
-		cout << "\n That direction is locked\n\n";
+		cout << "\n That path is locked\n\n";
+		return true;
+	}
+
+	if (actualRoom->IsDirectionBlockedByEnemies(direction)) 
+	{
 		return true;
 	}
 

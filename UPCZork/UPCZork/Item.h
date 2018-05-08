@@ -13,7 +13,9 @@ enum ItemType
 {
 	KEY,
 	WEAPON,
+	POTION,
 	CHEST,
+	DOOR,
 	OTHER
 };
 
@@ -38,7 +40,7 @@ public:
 	int id;
 	bool isLocked;
 
-	int damage;
+	int power;
 
 	ItemType itemType;
 

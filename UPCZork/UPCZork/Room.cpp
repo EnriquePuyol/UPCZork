@@ -15,6 +15,22 @@ Room::~Room()
 {
 }
 
+void Room::Look(string & direction)
+{
+	if (IsDirectionNull(direction))
+	{
+		cout << "\n There is nothing on that way";
+		return;
+	}
+
+	cout << "\n You see: ";
+	StartKeyWord();
+	cout << GetRoomOfDirection(direction)->name;
+	EndKeyWord();
+	cout << "\n\n";
+
+}
+
 void Room::Look()
 {
 	cout << "\n " << name << "\n ";
@@ -52,12 +68,31 @@ void Room::Look()
 	// Enemies
 	for (list<Entity*>::const_iterator _enemy = childs.begin(); _enemy != childs.cend(); _enemy++)
 	{
+		Enemy * enemy = (Enemy *)(*_enemy);
+
 		if ((*_enemy)->type == ENEMY)
 		{
 			cout << "\n  ! You are not alone here: ";
 			StartKeyWord(); 
 			cout << (*_enemy)->name;
 			EndKeyWord();
+			bool areBlockingExits = false;
+			for (int i = 0; i < 4; i++)
+			{
+				if (enemy->blockingExits[i])
+				{
+					if (!areBlockingExits)
+						cout << " is blocking the ";
+					else
+						cout << ", ";
+					StartKeyWord();
+					cout << directions[i];
+					EndKeyWord();
+					areBlockingExits = true;
+				}
+				if (i == 3 && areBlockingExits)
+					cout << " way";
+			}
 		}
 	}
 
@@ -111,6 +146,43 @@ bool Room::IsDirectionNull(string & direction)
 	{
 		if (neighbours[3] == NULL)
 			return true;
+	}
+
+	return false;
+}
+
+bool Room::IsDirectionBlockedByEnemies(string & direction)
+{
+	int index = -1;
+	if (Equals(direction, "North"))
+	{
+		index = 0;
+	}
+	else if (Equals(direction, "East"))
+	{
+		index = 1;
+	}
+	else if (Equals(direction, "West"))
+	{
+		index = 2;
+	}
+	else if (Equals(direction, "South"))
+	{
+		index = 3;
+	}
+
+	for (list<Entity*>::const_iterator _enemy = childs.begin(); _enemy != childs.cend(); _enemy++)
+	{
+		Enemy * enemy = (Enemy *)(*_enemy);
+		if (enemy->blockingExits[index] == true)
+		{
+			cout << "\n ";
+			StartKeyWord();
+			cout << enemy->name;
+			EndKeyWord();
+			cout << " is blocking that way...\n\n";
+			return true;
+		}
 	}
 
 	return false;

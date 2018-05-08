@@ -24,7 +24,7 @@ public:
 	bool Use()    override;
 	void Action() override;
 
-	bool Search();
+	int  Attack();
 
 	bool GetIsAlive()   { return isAlive; }
 	int  GetHitPoints() { return hitPoints; }
@@ -38,6 +38,7 @@ public:
 public:
 
 	bool isAlive;
+	bool blockingExits[4] = {false, false, false, false};
 
 	int hitPoints;
 	int armour;

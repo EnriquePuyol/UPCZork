@@ -78,19 +78,9 @@ void Enemy::Action()
 
 }
 
-bool Enemy::Search() 
+int Enemy::Attack()
 {
-	if (isAlive) 
-	{
-		cout << "\nI need to kill it first!\n";
-		return false;
-	}
-	else
-	{
-		//ToDo: Get the treasures
-		return true;
-	}
-	return false;
+	return damage;
 }
 
 Room * Enemy::GetRoom()

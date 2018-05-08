@@ -15,6 +15,7 @@ public:
 	Room(const char* _name, const char* _description);
 	~Room();
 
+	void Look(string & direction);
 	void Look() override;
 	bool Pick(string & itemName) override { return false; };
 	bool Drop(string & itemName) override { return false; };
@@ -23,6 +24,7 @@ public:
 
 	bool   SetNeighbour(Room * room, const char * direction);
 	bool   IsDirectionNull(string & direction);
+	bool   IsDirectionBlockedByEnemies(string & direction);
 	bool   AreEnemiesAlive();
 	Room * GetRoomOfDirection(string & direction);
 

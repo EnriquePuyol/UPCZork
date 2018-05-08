@@ -21,17 +21,20 @@ public:
 	void Look() override;
 	bool Pick(string & itemName) override;
 	bool Drop(string & itemName) override;
+	bool Use (string & itemName);
 	bool Use()  override;
 	void Action() override;
 	bool Examine(string & itemName);
 	bool Equip();
 
+	void Stats();
 	void Inventory();
 	bool Go(string & direction);
 
 public:
 
-	Item * weapon;
+	int hitPoints;
+	Item * armour;
 
 };
 
