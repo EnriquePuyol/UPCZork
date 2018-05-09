@@ -10,7 +10,7 @@ Player::Player(const char* _name, const char* _description, Room* _room) :
 	Entity(_name, _description, (Entity*)_room)
 {
 	type = PLAYER;
-	hitPoints = 5;
+	hitPoints = 1;
 }
 
 

@@ -35,11 +35,11 @@ void World::CreateWorld()
 	Room * brokenRoom = new Room("BrokenRoom", "Unavailable room to keep the items that breaks");
 	Room * room1	  = new Room("Clear", " This is where I woke up. It is a clear of a forest but \n  with the trees I can not see much");
 	Room * room2	  = new Room("Lake", " There is a lake here, this place feels involved in a magical aura");
-	Room * room3	  = new Room("Room_3", " You are in the north demo test!");
-	Room * room4      = new Room("Cave", " This cave looks a bit warmer than outside, but it is not very deep");
+	Room * room3	  = new Room("Woods", " This is the center of the forest, I should  not get lost");
+	Room * room4      = new Room("Room_4", " You are in one of the final rooms");
 	Room * room5	  = new Room("Room_5", " You are in one of the final rooms");
 	Room * room6	  = new Room("Room_6", " You are in one of the final rooms");
-	Room * room7	  = new Room("Room_7", " You are in one of the final rooms");
+	Room * room7	  = new Room("Cave", " This cave looks a bit warmer than outside, but it is not very deep");
 
 	rooms.push_back(brokenRoom);
 	rooms.push_back(room1);
@@ -69,7 +69,7 @@ void World::CreateWorld()
 	Enemy * wolf = new Enemy("Wolf", "A hungry grey wolf", room2, 1, 1, 0);
 	Enemy * ghost = new Enemy("Ghost_Wolf", "The wolf came back to life!!", brokenRoom, 2, 2, 0);
 	wolf->afterDeathEnemy = ghost;
-	Enemy * wildfire = new Enemy("Wildfire", "A living wilfire, looks furious", room7, 3, 1, 0);
+	Enemy * wildfire = new Enemy("Wildfire", "A living wilfire, looks furious", room7, 3, 1, 1);
 	Enemy * corpse = new Enemy("Corpse", "This place is dangerous...", room3, 0, 0, 0);
 	corpse->isAlive = false;
 
@@ -80,7 +80,7 @@ void World::CreateWorld()
 	// Doors
 	Enemy * door = new Enemy("Iron_Door", "A strong iron door", room1, 1, 0, 100);
 	door->enemyType = DOOR;
-	//door->blockingExits[0] = true; <--  ** Descomentar luego **
+	//door->blockingExits[0] = true; //<--  ** Descomentar luego **
 	door->id = 2;
 	Enemy * door2 = new Enemy("Esmerald_Door", "A beautifull esmerald door, looks really heavy", room7, 1, 0, 100);
 	door2->enemyType = DOOR;
@@ -102,7 +102,7 @@ void World::CreateWorld()
 	potion->power = 1;
 	Item * axe = new Item("Axe", "A lumberjack axe, it is really sharp", corpse, 0, WEAPON);
 	axe->power = 2;
-	Item * armour = new Item("Armor", "A simple armor made of leather", corpse, 0, ARMOUR);
+	Item * armour = new Item("Armor", "A simple armor made of leather", wildfire, 0, ARMOUR);
 	armour->power = 1;
 
 	items.push_back(chest);
@@ -532,20 +532,30 @@ bool World::ParseActions(vector<string>& args)
 				cout << enemy->name;
 				EndKeyWord();
 				cout << " attacked you and dealt " << enemy->damage << " damage\n\n";
+			}
+			else 
+			{
+				int damage2 = (enemy->damage - player->armour->power);
+				if (damage2 < 0)
+					damage2 = 0;
+
+				player->hitPoints -= damage2;
+
+				cout << " ";
+				StartKeyWord();
+				cout << enemy->name;
+				EndKeyWord();
+				cout << " attacked you and dealt " << damage2 << " damage (Your armour blocked " << (enemy->damage - damage2) << ")\n\n";
+			}			
+
+			if (player->hitPoints <= 0)
+			{
+				StartKeyWord();
+				cout << "\n "<< enemy->name;
+				EndKeyWord();
+				cout << " killed you!!! GAME OVER\n\n";
 				return true;
 			}
-
-			int damage2 = (enemy->damage - player->armour->power);
-			if (damage2 < 0)
-				damage2 = 0;
-
-			player->hitPoints -= damage2;
-
-			cout << " ";
-			StartKeyWord();
-			cout << enemy->name;
-			EndKeyWord();
-			cout << " attacked you and dealt " << damage2 << " damage (Your armour blocked "<< (enemy->damage - damage2) << ")\n\n";
 
 			return true;
 		}
