@@ -13,6 +13,7 @@ enum ItemType
 {
 	KEY,
 	WEAPON,
+	ARMOUR,
 	POTION,
 	CHEST,
 	OTHER

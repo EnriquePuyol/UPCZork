@@ -64,6 +64,12 @@ bool Player::Drop(string & itemName)
 		return true;
 	}
 
+	if (item->itemType == ARMOUR && armour != NULL)
+	{
+		if (Equals(item->name, armour->name))
+			armour = NULL;
+	}
+
 	cout << "\n You drop ";
 	StartKeyWord();
 	cout << item->name;
@@ -136,15 +142,83 @@ bool Player::Examine(string & itemName)
 	EndKeyWord();
 	if (item->itemType == WEAPON)
 	{
-		cout << "\n ) It has " << item->power << " point of damage\n\n";
+		if(item->power == 1)
+			cout << "\n ) It has " << item->power << " point of damage\n\n";
+		else
+			cout << "\n ) It has " << item->power << " points of damage\n\n";
+	}
+	else if (item->itemType == ARMOUR)
+	{
+		if (item->power == 1)
+			cout << "\n ) It gives me " << item->power << " point of protection\n\n";
+		else
+			cout << "\n ) It gives me " << item->power << " points of protection\n\n";
 	}
 
 	return true;
 }
 
-bool Player::Equip()
+bool Player::Equip(string & itemName)
 {
-	return false;
+	for (list<Entity*>::const_iterator it = childs.begin(); it != childs.cend(); ++it)
+	{
+		if ((*it)->type == ITEM)
+		{
+			Item * _armour = (Item *)(*it);
+
+			if (_armour->itemType == ARMOUR && Equals(_armour->name, itemName))
+			{
+				armour = _armour;
+				cout << "\n You equipped ";
+				StartKeyWord();
+				cout << armour->name << "\n\n";
+				EndKeyWord();
+
+				return true;
+			}
+
+			if (_armour->itemType != ARMOUR && Equals(_armour->name, itemName))
+			{
+				cout << "\n I can not equip that item\n\n";
+				return true;
+			}
+		}
+	}
+
+	cout << "\n I can not find that item";
+	return true;
+}
+
+bool Player::Unequip(string & itemName)
+{
+
+	if (armour == NULL)
+	{
+		cout << "\n You dont have an armour equipped...\n\n";
+		return true;
+	}
+
+	for (list<Entity*>::const_iterator it = childs.begin(); it != childs.cend(); ++it)
+	{
+		if ((*it)->type == ITEM)
+		{
+			Item * _armour = (Item *)(*it);
+
+			if (Equals(armour->name, _armour->name))
+			{
+				armour = NULL;
+				cout << "\n You unequipped ";
+				StartKeyWord();
+				cout << _armour->name << "\n\n";
+				EndKeyWord();
+
+				return true;
+			}
+		}
+	}
+	
+	cout << "\n You dont have an armour of that name\n\n";
+	return true;
 }
 
 void Player::Stats()

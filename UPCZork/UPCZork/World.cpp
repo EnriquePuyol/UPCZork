@@ -102,6 +102,8 @@ void World::CreateWorld()
 	potion->power = 1;
 	Item * axe = new Item("Axe", "A lumberjack axe, it is really sharp", corpse, 0, WEAPON);
 	axe->power = 2;
+	Item * armour = new Item("Armor", "A simple armor made of leather", corpse, 0, ARMOUR);
+	armour->power = 1;
 
 	items.push_back(chest);
 	items.push_back(sword);
@@ -222,6 +224,14 @@ bool World::ParseActions(vector<string>& args)
 		else if (Equals(args[0], "use"))
 		{
 			return player->Use(args[1]);
+		}
+		else if (Equals(args[0], "equip"))
+		{
+			return player->Equip(args[1]);
+		}
+		else if (Equals(args[0], "unequip"))
+		{
+			return player->Unequip(args[1]);
 		}
 	}
 	else if (numberOfArgs == 3)
@@ -525,13 +535,17 @@ bool World::ParseActions(vector<string>& args)
 				return true;
 			}
 
-			player->hitPoints -= (enemy->damage - player->armour->power);
+			int damage2 = (enemy->damage - player->armour->power);
+			if (damage2 < 0)
+				damage2 = 0;
+
+			player->hitPoints -= damage2;
 
 			cout << " ";
 			StartKeyWord();
 			cout << enemy->name;
 			EndKeyWord();
-			cout << " attacked you and dealt " << enemy->damage << " damage\n\n";
+			cout << " attacked you and dealt " << damage2 << " damage (Your armour blocked "<< (enemy->damage - damage2) << ")\n\n";
 
 			return true;
 		}

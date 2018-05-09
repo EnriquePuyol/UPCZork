@@ -97,16 +97,17 @@ void Help()
 	EndKeyWord();
 	cout << "+ [item/door] with [item] -> Unlock/Open something";
 
-	/*
-	cout << "\n\n num. ";
+	cout << "\n 11. ";
 	StartKeyWord();
-	cout << ;
+	cout << "Equip ";
 	EndKeyWord();
-	*/
+	cout << "+ [armour] -> Equip an armour";
+
+	cout << "\n 12. ";
+	StartKeyWord();
+	cout << "Unequip ";
+	EndKeyWord();
+	cout << "+ [armour] -> Unequip an armour";
 
 	cout << "\n\n";
-
-	// Attack [enemy] with [weapon]
-	// Unlock [chest/door] with [item]
-
 }

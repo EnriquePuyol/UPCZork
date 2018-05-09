@@ -25,7 +25,8 @@ public:
 	bool Use()  override;
 	void Action() override;
 	bool Examine(string & itemName);
-	bool Equip();
+	bool Equip  (string & itemName);
+	bool Unequip(string & itemName);
 
 	void Stats();
 	void Inventory();
