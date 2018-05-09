@@ -33,13 +33,13 @@ void World::CreateWorld()
 {
 	// Rooms
 	Room * brokenRoom = new Room("BrokenRoom", "Unavailable room to keep the items that breaks");
-	Room * room1	  = new Room("Room_1", "You are in the beta room test!");
-	Room * room2	  = new Room("Room_2", "You are in the magic room test!");
-	Room * room3	  = new Room("Room_3", "You are in the north demo test!");
-	Room * room4      = new Room("Room_4", "You are in one of the final rooms");
-	Room * room5	  = new Room("Room_5", "You are in one of the final rooms");
-	Room * room6	  = new Room("Room_6", "You are in one of the final rooms");
-	Room * room7	  = new Room("Room_7", "You are in one of the final rooms");
+	Room * room1	  = new Room("Clear", " This is where I woke up. It is a clear of a forest but \n  with the trees I can not see much");
+	Room * room2	  = new Room("Lake", " There is a lake here, this place feels involved in a magical aura");
+	Room * room3	  = new Room("Room_3", " You are in the north demo test!");
+	Room * room4      = new Room("Cave", " This cave looks a bit warmer than outside, but it is not very deep");
+	Room * room5	  = new Room("Room_5", " You are in one of the final rooms");
+	Room * room6	  = new Room("Room_6", " You are in one of the final rooms");
+	Room * room7	  = new Room("Room_7", " You are in one of the final rooms");
 
 	rooms.push_back(brokenRoom);
 	rooms.push_back(room1);
@@ -70,16 +70,19 @@ void World::CreateWorld()
 	Enemy * ghost = new Enemy("Ghost_Wolf", "The wolf came back to life!!", brokenRoom, 2, 2, 0);
 	wolf->afterDeathEnemy = ghost;
 	Enemy * wildfire = new Enemy("Wildfire", "A living wilfire, looks furious", room7, 3, 1, 0);
+	Enemy * corpse = new Enemy("Corpse", "This place is dangerous...", room3, 0, 0, 0);
+	corpse->isAlive = false;
 
 	enemies.push_back(wolf);
 	enemies.push_back(wildfire);
+	enemies.push_back(corpse);
 
 	// Doors
 	Enemy * door = new Enemy("Iron_Door", "A strong iron door", room1, 1, 0, 100);
 	door->enemyType = DOOR;
 	//door->blockingExits[0] = true; <--  ** Descomentar luego **
 	door->id = 2;
-	Enemy * door2 = new Enemy("Esmeral_Door", "A beautifull esmerald door, looks really heavy", room7, 1, 0, 100);
+	Enemy * door2 = new Enemy("Esmerald_Door", "A beautifull esmerald door, looks really heavy", room7, 1, 0, 100);
 	door2->enemyType = DOOR;
 	door2->blockingExits[2] = true;
 	door2->id = 3;
@@ -94,9 +97,11 @@ void World::CreateWorld()
 	sword->power = 1;
 	Item * key  = new Item("Wood_Key", "A simple key made of wood", wolf, 1, KEY);
 	Item * key2 = new Item("Iron_Key", "A decorated iron key", chest, 2, KEY);
-	Item * key3 = new Item("Esmeral_key", "A strange green key", wildfire, 3, KEY);
+	Item * key3 = new Item("Esmerald_key", "A strange green key", wildfire, 3, KEY);
 	Item * potion = new Item("Basic_Potion", "A simple potion to heal yourself 1 HP", chest, 0, POTION);
 	potion->power = 1;
+	Item * axe = new Item("Axe", "A lumberjack axe, it is really sharp", corpse, 0, WEAPON);
+	axe->power = 2;
 
 	items.push_back(chest);
 	items.push_back(sword);
@@ -104,6 +109,7 @@ void World::CreateWorld()
 	items.push_back(key2);
 	items.push_back(key3);
 	items.push_back(potion);
+	items.push_back(axe);
 
 	// Player
 	player = new Player("Hero", "I am myself", room1);
@@ -455,6 +461,12 @@ bool World::ParseActions(vector<string>& args)
 			}
 
 			//Restarle vida al enemigo
+			if (!enemy->isAlive)
+			{
+				cout << "\n The enemy is already dead\n\n";
+				return true;
+			}
+
 			int damage = (weapon->power - enemy->armour);
 			if (damage < 0)
 				damage = 0;
@@ -478,6 +490,8 @@ bool World::ParseActions(vector<string>& args)
 				StartKeyWord();
 				cout << enemy->name;
 				EndKeyWord();
+
+				enemy->isAlive = false;
 
 				if (enemy->afterDeathEnemy != NULL)
 				{
