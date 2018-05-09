@@ -62,6 +62,7 @@ The game contains the following commands:
 - Unequip (item) = Unequip yourself of the armour equipped
 - Attack (enemy) with (item) = Attacks an enemy with a weapon
 - Unlock (item) with (item)  = Unlocks a door or chest with its key
+- Put (item) in (item2) = Puts an item from my inventory inside item2
 
 Other commands:
 - Help = Get help of the commands inside the game
