@@ -22,6 +22,14 @@ void Item::Look()
 	cout << "\n " << name << "\n ";
 	EndKeyWord();
 
+	if (itemType == WEAPON)
+	{
+		if (power == 1)
+			cout << "\n -It has " << power << " point of damage\n\n";
+		else
+			cout << "\n -It has " << power << " points of damage\n\n";
+	}
+
 	if (!isLocked)
 	{
 		if (childs.size() == 0 && itemType == CHEST)

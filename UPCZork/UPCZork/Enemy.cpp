@@ -24,6 +24,20 @@ void Enemy::Look()
 	{
 		cout << "\n " << description << "\n";
 
+		cout << "\n -It has ";
+		if (hitPoints == 1)
+			cout << hitPoints << " point of HP,\n";
+		else
+			cout << hitPoints << " points of HP,\n";
+		if (damage == 1)
+			cout << "         " << damage << " point of Damage and\n";
+		else
+			cout << "         " << damage << " points of Damage and\n";
+		if (armour == 1)
+			cout << "         " << armour << " point of Armour\n\n";
+		else
+			cout << "         " << armour << " points of Armour\n\n";
+
 		for (list<Entity*>::const_iterator it = childs.begin(); it != childs.cend(); ++it)
 		{
 			if ((*it)->type == ITEM)

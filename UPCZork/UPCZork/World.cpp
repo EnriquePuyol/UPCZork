@@ -374,11 +374,17 @@ bool World::ParseActions(vector<string>& args)
 			}
 
 			//Restarle vida al enemigo
-			enemy->hitPoints -= (weapon->power - enemy->armour);
-			cout << "\n You did " << (weapon->power + enemy->armour) << " damage to ";
+			int damage = (weapon->power - enemy->armour);
+			if (damage < 0)
+				damage = 0;
+			enemy->hitPoints -= damage;
+			cout << "\n You did " << damage << " damage to ";
 			StartKeyWord();
 			cout << enemy->name;
 			EndKeyWord();
+			if (enemy->armour > 0)
+				cout << " (his armour blocked "<< (weapon->power - damage) << " damage)";
+
 			cout << "\n";
 
 			if (enemy->hitPoints <= 0)
@@ -417,6 +423,13 @@ bool World::ParseActions(vector<string>& args)
 			cout << " attacked you and dealt " << enemy->damage << " damage\n\n";
 
 			return true;
+		}
+		else if (Equals(args[0], "use"))
+		{
+			if (Equals(args[3], "me"))
+			{
+				return player->Use(args[1]);
+			}
 		}
 	}
 
