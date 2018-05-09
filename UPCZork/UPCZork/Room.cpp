@@ -128,6 +128,12 @@ void Room::Look()
 				if (i == 3 && areBlockingExits)
 					cout << " way";
 			}
+
+			if (enemy->hitPoints <= 0)
+			{
+				cout << " [Dead]";
+			}
+
 		}
 	}
 

@@ -67,12 +67,25 @@ void World::CreateWorld()
 
 	// Enemies
 	Enemy * wolf = new Enemy("Wolf", "A hungry grey wolf", room2, 1, 1, 0);
+	Enemy * ghost = new Enemy("Ghost_Wolf", "The wolf came back to life!!", brokenRoom, 2, 2, 0);
+	wolf->afterDeathEnemy = ghost;
+	Enemy * wildfire = new Enemy("Wildfire", "A living wilfire, looks furious", room7, 3, 1, 0);
+
+	enemies.push_back(wolf);
+	enemies.push_back(wildfire);
+
+	// Doors
 	Enemy * door = new Enemy("Iron_Door", "A strong iron door", room1, 1, 0, 100);
 	door->enemyType = DOOR;
-	door->blockingExits[0] = true;
+	//door->blockingExits[0] = true; <--  ** Descomentar luego **
 	door->id = 2;
-	//wolf->blockingExits[2] = true;
-	enemies.push_back(wolf);
+	Enemy * door2 = new Enemy("Esmeral_Door", "A beautifull esmerald door, looks really heavy", room7, 1, 0, 100);
+	door2->enemyType = DOOR;
+	door2->blockingExits[2] = true;
+	door2->id = 3;
+
+	enemies.push_back(door);
+	enemies.push_back(door2);
 
 	// Items
 	Item * chest = new Item("Wood_Chest", "A wooden chest, what could have inside?", room2, 1, CHEST);
@@ -81,13 +94,16 @@ void World::CreateWorld()
 	sword->power = 1;
 	Item * key  = new Item("Wood_Key", "A simple key made of wood", wolf, 1, KEY);
 	Item * key2 = new Item("Iron_Key", "A decorated iron key", chest, 2, KEY);
+	Item * key3 = new Item("Esmeral_key", "A strange green key", wildfire, 3, KEY);
 	Item * potion = new Item("Basic_Potion", "A simple potion to heal yourself 1 HP", chest, 0, POTION);
 	potion->power = 1;
-	//Item * key2 = new Item("Iron_Key", "A rusty old iron key", wolf, 2, KEY);
 
 	items.push_back(chest);
 	items.push_back(sword);
 	items.push_back(key);
+	items.push_back(key2);
+	items.push_back(key3);
+	items.push_back(potion);
 
 	// Player
 	player = new Player("Hero", "I am myself", room1);
@@ -462,7 +478,23 @@ bool World::ParseActions(vector<string>& args)
 				StartKeyWord();
 				cout << enemy->name;
 				EndKeyWord();
+
+				if (enemy->afterDeathEnemy != NULL)
+				{
+					enemy->afterDeathEnemy->ChangeParentTo(enemy->parent);
+					StartKeyWord();
+					cout << "\n\n " <<enemy->afterDeathEnemy->name;
+					EndKeyWord();
+					cout << " appears from the corpe of ";
+					StartKeyWord();
+					cout << enemy->name;
+					EndKeyWord();
+					cout << "!";
+
+				}
+
 				cout << "\n\n";
+
 				return true;
 			}
 			
