@@ -95,7 +95,7 @@ void Room::Look()
 					areBlockingExits = true;
 				}
 				if (i == 3 && areBlockingExits)
-					cout << " way";
+					cout << " way\n";
 			}
 		}
 	}

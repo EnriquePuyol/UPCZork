@@ -10,7 +10,8 @@ Player::Player(const char* _name, const char* _description, Room* _room) :
 	Entity(_name, _description, (Entity*)_room)
 {
 	type = PLAYER;
-	hitPoints = 1;
+	hitPoints = 5;
+	victory = false;
 }
 
 
@@ -287,6 +288,9 @@ bool Player::Go(string & direction)
 	ChangeParentTo(actualRoom->GetRoomOfDirection(direction));
 
 	parent->Look();
+
+	if (Equals(parent->name, "Exit"))
+		victory = true;
 
 	return true;
 

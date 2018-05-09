@@ -37,6 +37,8 @@ public:
 	int hitPoints;
 	Item * armour;
 
+	bool victory;
+
 };
 
 #endif
