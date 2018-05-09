@@ -89,7 +89,7 @@ void World::CreateWorld()
 	// Doors
 	Enemy * door = new Enemy("Iron_Door", "A strong iron door", room1, 1, 0, 100);
 	door->enemyType = DOOR;
-	//door->blockingExits[0] = true;
+	door->blockingExits[0] = true;
 	door->id = 2;
 	Enemy * door2 = new Enemy("Esmerald_Door", "A beautifull esmerald door, looks really heavy", room7, 1, 0, 100);
 	door2->enemyType = DOOR;
@@ -219,7 +219,6 @@ bool World::ParseActions(vector<string>& args)
 					}
 				}
 
-				// Gets the name and description of the item or enemy
 				for (list<Entity*>::const_iterator it = player->parent->childs.begin(); it != player->parent->childs.cend(); ++it)
 				{
 					if (Equals((*it)->name, args[1]))
@@ -280,7 +279,7 @@ bool World::ParseActions(vector<string>& args)
 			}
 			else 
 			{
-				// Gets the name and description of the item or enemy
+				
 				for (list<Entity*>::const_iterator it = player->parent->childs.begin(); it != player->parent->childs.cend(); ++it)
 				{
 					if (Equals((*it)->name, args[2]))

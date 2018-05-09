@@ -1,0 +1,13 @@
+﻿  stdafx.cpp
+  Common.cpp
+  Enemy.cpp
+  Entity.cpp
+  Item.cpp
+  Player.cpp
+  Room.cpp
+  UPCZork.cpp
+  World.cpp
+  Generando código
+  All 320 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Generación de código finalizada
+  UPCZork.vcxproj -> D:\Prueba UPC\UPCZork\Release\UPCZork.exe
