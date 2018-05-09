@@ -33,7 +33,9 @@ void Room::Look(string & direction)
 
 void Room::Look()
 {
+	StartKeyWord();
 	cout << "\n " << name << "\n ";
+	EndKeyWord();
 	cout << description;
 	cout << "\n";
 

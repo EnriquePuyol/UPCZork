@@ -31,7 +31,6 @@ public:
 
 public:
 
-	bool isLocked;
 	const char * directions[4] = {"North", "East", "West", "South"};
 
 	Room * neighbours[4] = {NULL, NULL, NULL, NULL};

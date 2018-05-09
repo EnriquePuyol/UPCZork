@@ -24,8 +24,6 @@ public:
 	World();
 	~World();
 
-	bool RunGame();
-
 	void CreateWorld();
 
 	bool Action(vector<string>& args);

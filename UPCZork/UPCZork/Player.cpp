@@ -203,12 +203,6 @@ bool Player::Go(string & direction)
 		return true;
 	}
 
-	if (actualRoom->GetRoomOfDirection(direction)->isLocked)
-	{
-		cout << "\n That path is locked\n\n";
-		return true;
-	}
-
 	if (actualRoom->IsDirectionBlockedByEnemies(direction)) 
 	{
 		return true;

@@ -29,11 +29,6 @@ World::~World()
 	rooms.clear();
 }
 
-bool World::RunGame() 
-{
-	return false;
-}
-
 void World::CreateWorld()
 {
 	// Rooms
@@ -41,17 +36,34 @@ void World::CreateWorld()
 	Room * room1	  = new Room("Room_1", "You are in the beta room test!");
 	Room * room2	  = new Room("Room_2", "You are in the magic room test!");
 	Room * room3	  = new Room("Room_3", "You are in the north demo test!");
-	//room2->isLocked = true;
-	//room3->isLocked = true;
+	Room * room4      = new Room("Room_4", "You are in one of the final rooms");
+	Room * room5	  = new Room("Room_5", "You are in one of the final rooms");
+	Room * room6	  = new Room("Room_6", "You are in one of the final rooms");
+	Room * room7	  = new Room("Room_7", "You are in one of the final rooms");
+
 	rooms.push_back(brokenRoom);
 	rooms.push_back(room1);
 	rooms.push_back(room2);
 	rooms.push_back(room3);
+	rooms.push_back(room4);
+	rooms.push_back(room5);
+	rooms.push_back(room6);
+	rooms.push_back(room7);
 
 	room1->SetNeighbour(room2, "West");
-	room2->SetNeighbour(room1, "East");
 	room1->SetNeighbour(room3, "North");
+	room2->SetNeighbour(room1, "East");
 	room3->SetNeighbour(room1, "South");
+	room3->SetNeighbour(room6, "West");
+	room3->SetNeighbour(room7, "East");
+	room3->SetNeighbour(room4, "North");
+	room4->SetNeighbour(room5, "West");
+	room4->SetNeighbour(room3, "South");
+	room5->SetNeighbour(room4, "East");
+	room5->SetNeighbour(room6, "South");
+	room6->SetNeighbour(room5, "North");
+	room6->SetNeighbour(room3, "East");
+	room7->SetNeighbour(room3, "West");
 
 	// Enemies
 	Enemy * wolf = new Enemy("Wolf", "A hungry grey wolf", room2, 1, 1, 0);
