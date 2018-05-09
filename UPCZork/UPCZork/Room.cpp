@@ -65,12 +65,45 @@ void Room::Look()
 
 	cout << "\n";
 
+	// Doors
+	for (list<Entity*>::const_iterator _enemy = childs.begin(); _enemy != childs.cend(); _enemy++)
+	{
+		Enemy * enemy = (Enemy *)(*_enemy);
+
+		if ((*_enemy)->type == ENEMY && enemy->enemyType == DOOR)
+		{
+			bool areBlockingExits = false;
+			for (int i = 0; i < 4; i++)
+			{
+				if (enemy->blockingExits[i])
+				{
+					if (!areBlockingExits)
+					{
+						cout << "  - ";
+						StartKeyWord();
+						cout << (*_enemy)->name;
+						EndKeyWord();
+						cout << " is blocking the ";
+					}
+					else
+						cout << ", ";
+					StartKeyWord();
+					cout << directions[i];
+					EndKeyWord();
+					areBlockingExits = true;
+				}
+				if (i == 3 && areBlockingExits)
+					cout << " way";
+			}
+		}
+	}
+
 	// Enemies
 	for (list<Entity*>::const_iterator _enemy = childs.begin(); _enemy != childs.cend(); _enemy++)
 	{
 		Enemy * enemy = (Enemy *)(*_enemy);
 
-		if ((*_enemy)->type == ENEMY)
+		if ((*_enemy)->type == ENEMY && enemy->enemyType == NORMAL)
 		{
 			cout << "\n  ! You are not alone here: ";
 			StartKeyWord(); 
@@ -174,13 +207,22 @@ bool Room::IsDirectionBlockedByEnemies(string & direction)
 	for (list<Entity*>::const_iterator _enemy = childs.begin(); _enemy != childs.cend(); _enemy++)
 	{
 		Enemy * enemy = (Enemy *)(*_enemy);
-		if (enemy->blockingExits[index] == true)
+		if (enemy->blockingExits[index] == true && enemy->enemyType == NORMAL)
 		{
 			cout << "\n ";
 			StartKeyWord();
 			cout << enemy->name;
 			EndKeyWord();
 			cout << " is blocking that way...\n\n";
+			return true;
+		}
+		else if (enemy->blockingExits[index] == true && enemy->enemyType == DOOR)
+		{
+			cout << "\n ";
+			StartKeyWord();
+			cout << enemy->name;
+			EndKeyWord();
+			cout << " is locked and blocking the way...\n\n";
 			return true;
 		}
 	}
@@ -195,7 +237,7 @@ bool Room::AreEnemiesAlive()
 		if ((*_enemy)->type == ENEMY)
 		{
 			Enemy * enemy = (Enemy *)(*_enemy);
-			if (enemy->isAlive)
+			if (enemy->isAlive && enemy->enemyType == NORMAL)
 			{
 				return true;
 			}

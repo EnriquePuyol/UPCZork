@@ -10,6 +10,12 @@ class Item;
 
 using namespace std;
 
+enum EnemyType
+{
+	NORMAL,
+	DOOR
+};
+
 class Enemy : public Entity
 {
 
@@ -36,6 +42,9 @@ public:
 	void SetAfterDeathEnemy(Enemy * _enemy) { afterDeathEnemy = _enemy; }
 
 public:
+
+	int id;
+	EnemyType enemyType;
 
 	bool isAlive;
 	bool blockingExits[4] = {false, false, false, false};

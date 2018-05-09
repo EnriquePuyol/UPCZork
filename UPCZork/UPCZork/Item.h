@@ -15,7 +15,6 @@ enum ItemType
 	WEAPON,
 	POTION,
 	CHEST,
-	DOOR,
 	OTHER
 };
 

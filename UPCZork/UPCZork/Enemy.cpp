@@ -1,12 +1,15 @@
 #include "stdafx.h"
 #include "Common.h"
 #include "Enemy.h"
+#include "Room.h"
 
 
 Enemy::Enemy(const char* _name, const char* _description, Room* _room, int _hitpoints, int _damage, int _armour) :
 	Entity(_name, _description, (Entity*)_room)
 {
 	type = ENEMY;
+	enemyType = NORMAL;
+	id = 0;
 	isAlive = true;
 	hitPoints = _hitpoints;
 	damage = _damage;
@@ -23,6 +26,27 @@ void Enemy::Look()
 	if (isAlive) 
 	{
 		cout << "\n " << description << "\n";
+
+		if (enemyType == DOOR)
+		{
+			for (int i = 0; i < 4; i++)
+			{
+				if (blockingExits[i])
+				{
+					Room * actualRoom = (Room *)parent;
+
+					cout << " It is blocking the ";
+					StartKeyWord();
+					cout << actualRoom->directions[i];
+					EndKeyWord();
+					cout << " way\n\n";
+
+					return;
+				}
+			}
+
+			return;
+		}
 
 		cout << "\n -It has ";
 		if (hitPoints == 1)

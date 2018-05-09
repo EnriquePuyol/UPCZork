@@ -54,8 +54,11 @@ void World::CreateWorld()
 	room3->SetNeighbour(room1, "South");
 
 	// Enemies
-	Enemy * wolf = new Enemy("Wolf", "A hungry grey wolf", room1, 2, 1, 0);
-	wolf->blockingExits[2] = true;
+	Enemy * wolf = new Enemy("Wolf", "A hungry grey wolf", room2, 1, 1, 0);
+	Enemy * door = new Enemy("Iron_Door", "A strong iron door", room1, 1, 0, 100);
+	door->enemyType = DOOR;
+	door->blockingExits[0] = true;
+	door->id = 2;
 	//wolf->blockingExits[2] = true;
 	enemies.push_back(wolf);
 
@@ -64,7 +67,8 @@ void World::CreateWorld()
 	chest->isLocked = true;
 	Item * sword = new Item("Sword", "An ordinary test sword", room1, 0, WEAPON);
 	sword->power = 1;
-	Item * key = new Item("Wood_Key", "A simple key made of wood", wolf, 1, KEY);
+	Item * key  = new Item("Wood_Key", "A simple key made of wood", wolf, 1, KEY);
+	Item * key2 = new Item("Iron_Key", "A decorated iron key", chest, 2, KEY);
 	Item * potion = new Item("Basic_Potion", "A simple potion to heal yourself 1 HP", chest, 0, POTION);
 	potion->power = 1;
 	//Item * key2 = new Item("Iron_Key", "A rusty old iron key", wolf, 2, KEY);
@@ -299,10 +303,11 @@ bool World::ParseActions(vector<string>& args)
 		else if (Equals(args[0], "unlock"))
 		{
 			//Coger un objeto dentro de otro objeto
-			Item* item1 = (Item*)player->parent->Find(args[1], ITEM); // Chest
-			Item* item2 = (Item*)player->Find(args[3], ITEM);		  // Keys
+			Item * item1 = (Item *)player->parent->Find(args[1], ITEM);  // Chest
+			Enemy* door = (Enemy *)player->parent->Find(args[1], ENEMY); // Door
+			Item * item2 = (Item*)player->Find(args[3], ITEM);		     // Keys
 
-			if (item1 == NULL)
+			if (item1 == NULL && door == NULL)
 			{
 				cout << "\n\n Cannot find '" << args[1] << "'\n\n";
 				return true;
@@ -313,7 +318,7 @@ bool World::ParseActions(vector<string>& args)
 				return true;
 			}
 
-			if (item1->id == item2->id && item1->id != 0)
+			if (item1 != NULL && item1->id == item2->id && item1->id != 0)
 			{
 				Room * actualRoom = (Room *)player->parent;
 
@@ -339,9 +344,52 @@ bool World::ParseActions(vector<string>& args)
 				return true;
 			}
 
+			if (door != NULL && door->id == item2->id && door->id != 0)
+			{
+				Room * actualRoom = (Room *)player->parent;
+
+				if (actualRoom->AreEnemiesAlive())
+				{
+					cout << "\n Can not unlock while enemies are alive...\n\n";
+					return true;
+				}
+
+				for (int i = 0; i < 4; i++)
+					door->blockingExits[i] = false;
+				item2->ChangeParentTo(rooms.front());
+
+				cout << "\n The ";
+				StartKeyWord();
+				cout << door->name;
+				EndKeyWord();
+				cout << " has been unlocked.\n";
+
+				StartKeyWord();
+				cout << " " << item2->name;
+				EndKeyWord();
+				cout << " has broken.\n\n";
+
+				return true;
+			}
+
+			if (item1 != NULL)
+			{
+				cout << "\n The ";
+				StartKeyWord();
+				cout << item1->name;
+				EndKeyWord();
+				cout << " can not be unlocked with ";
+				StartKeyWord();
+				cout << item2->name;
+				EndKeyWord();
+				cout << "\n\n";
+
+				return true;
+			}
+			
 			cout << "\n The ";
 			StartKeyWord();
-			cout << item1->name;
+			cout << door->name;
 			EndKeyWord();
 			cout << " can not be unlocked with ";
 			StartKeyWord();
@@ -361,6 +409,11 @@ bool World::ParseActions(vector<string>& args)
 			if (enemy == NULL)
 			{
 				cout << "\n That enemy is not on this room\n\n";
+				return true;
+			}
+			if (enemy->enemyType == DOOR)
+			{
+				cout << "\n I can not attack a door...\n\n";
 				return true;
 			}
 
@@ -430,6 +483,44 @@ bool World::ParseActions(vector<string>& args)
 			{
 				return player->Use(args[1]);
 			}
+		}
+		else if (Equals(args[0], "put"))
+		{
+			//Coger un objeto dentro mi para dejarlo
+			Item* item = (Item*)player->Find(args[1], ITEM);
+
+			if (item == NULL)
+			{
+				cout << "\n\n You do not own that item\n\n";
+				return true;
+			}
+
+			//El chest
+			Item* chest = (Item*)player->parent->Find(args[3], ITEM);
+
+			if (chest == NULL)
+			{
+				cout << "\n\n There is no where to put it\n\n";
+				return true;
+			}
+			if (chest->isLocked)
+			{
+				cout << "\n\n That chest is locked\n\n";
+				return true;
+			}
+			
+			item->ChangeParentTo(chest);
+			cout << "\n\n You put ";
+			StartKeyWord();
+			cout << item->name;
+			EndKeyWord();
+			cout << " in ";
+			StartKeyWord();
+			cout << chest->name << "\n\n";
+			EndKeyWord();
+
+			return true;
+
 		}
 	}
 
