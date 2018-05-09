@@ -27,6 +27,7 @@ Map
 Items
 ==================
 Types of items:
+
 - Keys: To unlock chests and doors
 - Weapons: To fight enemies
 - Armours: To protect yourself
@@ -43,6 +44,7 @@ Commands
 ==================
 The game contains the following commands:
 - Look (room)      = Gets information about the room (items, enemies, neighbours, locked doors...)
+
        (direction) = Gets the name of the neighbour in that direction
        (item)      = Gets the info of an item, depending on the item it gives diferent information
        (enemy)     = Gets the stats of the enemy, and its items.
@@ -73,12 +75,17 @@ You start in 'Clear', from there you should follow the next steps to complete th
 1. Pick sword
 2. Go west
 3. Attack wolf with sword
+
   3.1. Attack ghost_wolf with sword (until it dies)
+  
 4. Pick wood_key from wolf
 5. Unlock wood_chest with wood_key
 6. Pick iron_key from wood_chest
+
   6.1. Pick basic_potion from wood_chest (optional)
+  
   6.2. Use basic_potion (recommended)
+  
 7. Go east
 8. Unlock iron_door with iron_key
 9. Go north
@@ -86,7 +93,9 @@ You start in 'Clear', from there you should follow the next steps to complete th
 11. Pick armor from corpse
 12. Go North
 13. Pick superpotion
+
   13.1. Use superpotion
+  
 14. Go west
 15. Attack guard with axe (until it dies)
 16. Pick spear from guard
@@ -118,12 +127,15 @@ Enemies and Doors can block more than one direction thanks to the array 'blockin
 Classes created
 ==================
 UPCZork (main)
+
 Entity
   - Player
   - Room
   - Item
   - Enemy
+  
 World
+
 Common  
 
 License
