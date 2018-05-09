@@ -109,9 +109,22 @@ Some enemies only appear as 'ghosts', so are only alive when we kill its "father
 Doors have been programmed as enemies, but have different behavious. This is because like the real enemies, doors blocks directions until they are unlocked. So instead of making a new class just for the doors, I made an enemyType variable and used the Enemy class for the doors. This could be also used to make doors destructible (but in this game they arent).
 You can die in the game, which would force you to quit the game.
 
+When the console shows up text. Some keywords are highlighted in green. This is to help the player identify which things are interactible and which not. The color of the text also change when typing an input. So it is easier to difference different actions.
+
 I struggled making enemies block you ways. Because at first I was doubting on the way to program it. I finally decided to make an array of booleans.
 Programming the doors were the most difficult thing to do in this game. Because I didnt know how to consider them. I finally decided to make it "enemies" so I could recycle the enemy variable 'blockingExits'.
-Enemies and Doors can block more than one direction thanks to the array 'blockingExits'. Although in the final version there is no enemy which does this. 
+Enemies and Doors can block more than one direction thanks to the array 'blockingExits'. Although in the final version there is no enemy which does this.
+
+Classes created
+==================
+UPCZork (main)
+Entity
+  - Player
+  - Room
+  - Item
+  - Enemy
+World
+Common  
 
 License
 ==================
